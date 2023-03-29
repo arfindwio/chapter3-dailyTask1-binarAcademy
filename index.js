@@ -34,6 +34,8 @@ app.put("/person/:id", (req, res) => {
 });
 
 // 2) bikin validasi jika id tidak ditemukan dari params id nya di api get data by id, delete dan put
+
+// get data by id
 // app.get("/person/:id", (req, res) => {
 //   const id = req.params.id * 1;
 //   const person = persons.find((el) => el.id === id);
@@ -46,6 +48,7 @@ app.put("/person/:id", (req, res) => {
 //   }
 // });
 
+// delete data by id
 // app.delete("/person/:id", (req, res) => {
 //   const id = req.params.id * 1;
 //   const person = persons.find((el) => el.id === id);
@@ -58,6 +61,7 @@ app.put("/person/:id", (req, res) => {
 //   }
 // });
 
+// put data by id
 // app.put("/person/:id", (req, res) => {
 //   const id = req.params.id * 1;
 //   const person = persons.find((el) => el.id === id);
@@ -71,32 +75,39 @@ app.put("/person/:id", (req, res) => {
 // });
 
 // 3) bikin validasi di create/edit API utk request body
-// app.post("/person", (req, res) => {
-//   console.log(persons.length - 1);
-//   const newId = persons.length - 1 + 10;
-//   const newPerson = Object.assign({ id: newId }, req.body);
+app.post("/person", (req, res) => {
+  // console.log(persons.length - 1);
+  const newId = persons.length - 1 + 10;
+  const newPerson = Object.assign({ id: newId }, req.body);
 
-//   // validasi kalau name nya udh ada, maka gk bisa create data baru
-//   const personName = persons.find((el) => el.name === req.body.name);
-//   console.log(personName);
+  // validasi kalau name nya udh ada, maka gk bisa create data baru
+  const personName = persons.find((el) => el.name === req.body.name);
+  // console.log(personName);
 
-//   if (personName) {
-//     res.status(400).json({
-//       status: "failed",
-//       message: `name ${req.body.name} already exist`,
-//     });
-//   } else {
-//     persons.push(newPerson);
-//     fs.writeFile(`${__dirname}/person.json`, JSON.stringify(persons), (errr) => {
-//       res.status(201).json({
-//         status: "success",
-//         data: {
-//           person: newPerson,
-//         },
-//       });
-//     });
-//   }
-// });
+  const cukupUmur = req.body.age < 20;
+
+  if (personName) {
+    res.status(400).json({
+      status: "failed",
+      message: `name ${req.body.name} already exist`,
+    });
+  } else if (cukupUmur) {
+    res.status(400).json({
+      status: "failed",
+      message: `umur ${req.body.age} belum cukup`,
+    });
+  } else {
+    persons.push(newPerson);
+    fs.writeFile(`${__dirname}/person.json`, JSON.stringify(persons), (errr) => {
+      res.status(201).json({
+        status: "success",
+        data: {
+          person: newPerson,
+        },
+      });
+    });
+  }
+});
 
 // memulai server nya
 app.listen(PORT, () => {
