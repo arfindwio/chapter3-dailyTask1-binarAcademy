@@ -3,12 +3,24 @@ const fs = require("fs");
 const app = express();
 const PORT = 3000;
 
+// middleware
 app.use(express.json());
 
+// proses baca file json nya dengan FS module, dan json nya dibantu dibaca dengan JSON.parse
 const persons = JSON.parse(fs.readFileSync(`${__dirname}/person.json`));
+
+app.get("/person", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    data: {
+      persons: persons,
+    },
+  });
+});
 
 // 1) bikin proses put/edit data sukses sampai data nya teredit di file json nya
 app.put("/person/:id", (req, res) => {
+  // ngambil id dari URL dan ubah id dari string menjadi number
   const id = parseInt(req.params.id);
   const index = persons.findIndex((element) => element.id === id);
   const person = persons.find((el) => el.id === id);
@@ -44,6 +56,13 @@ app.get("/person/:id", (req, res) => {
       status: "failed",
       message: `person dengan id ${id} tidak ditemukan`,
     });
+  } else {
+    res.status(200).json({
+      status: "success",
+      data: {
+        person,
+      },
+    });
   }
 });
 
@@ -57,6 +76,17 @@ app.delete("/person/:id", (req, res) => {
       message: `person dengan id ${id} tidak ditemukan`,
     });
   }
+
+  if (index !== -1) {
+    persons.splice(index, 1);
+  }
+
+  fs.writeFile(`${__dirname}/person.json`, JSON.stringify(persons), (errr) => {
+    res.status(200).json({
+      status: "success",
+      message: `data dari id ${id} nya berhasil dihapus`,
+    });
+  });
 });
 
 // 3) bikin validasi di create/edit API utk request body
