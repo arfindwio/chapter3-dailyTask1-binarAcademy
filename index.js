@@ -35,44 +35,29 @@ app.put("/person/:id", (req, res) => {
 
 // 2) bikin validasi jika id tidak ditemukan dari params id nya di api get data by id, delete dan put
 
-// get data by id
-// app.get("/person/:id", (req, res) => {
-//   const id = req.params.id * 1;
-//   const person = persons.find((el) => el.id === id);
+app.get("/person/:id", (req, res) => {
+  const id = req.params.id * 1;
+  const person = persons.find((el) => el.id === id);
 
-//   if (!person) {
-//     res.status(400).json({
-//       status: "failed",
-//       message: `person dengan id ${id} tidak ditemukan`,
-//     });
-//   }
-// });
+  if (!person) {
+    res.status(400).json({
+      status: "failed",
+      message: `person dengan id ${id} tidak ditemukan`,
+    });
+  }
+});
 
-// delete data by id
-// app.delete("/person/:id", (req, res) => {
-//   const id = req.params.id * 1;
-//   const person = persons.find((el) => el.id === id);
+app.delete("/person/:id", (req, res) => {
+  const id = req.params.id * 1;
+  const person = persons.find((el) => el.id === id);
 
-//   if (!person) {
-//     res.status(400).json({
-//       status: "failed",
-//       message: `person dengan id ${id} tidak ditemukan`,
-//     });
-//   }
-// });
-
-// put data by id
-// app.put("/person/:id", (req, res) => {
-//   const id = req.params.id * 1;
-//   const person = persons.find((el) => el.id === id);
-
-//   if (!person) {
-//     res.status(400).json({
-//       status: "failed",
-//       message: `person dengan id ${id} tidak ditemukan`,
-//     });
-//   }
-// });
+  if (!person) {
+    res.status(400).json({
+      status: "failed",
+      message: `person dengan id ${id} tidak ditemukan`,
+    });
+  }
+});
 
 // 3) bikin validasi di create/edit API utk request body
 app.post("/person", (req, res) => {
